@@ -12,93 +12,87 @@ class TicTacToe {
     o: 'x',
   }
 
-    // constructor() {    
-    // }
-    
+  getCurrentPlayerSymbol() {
+    return this.currentSymbol;
+  }
 
-    getCurrentPlayerSymbol() {
-      return this.currentSymbol;
-    }
+  nextTurn(rowIndex, colIndex) {
+    if(this.field[rowIndex][colIndex] !== null) return;
 
-    nextTurn(rowIndex, colIndex) {
-      if(this.field[rowIndex][colIndex] !== null) return;
-      this.setFieldValue(rowIndex, colIndex);
-      this.changeCurrentSymbol(); 
-      this.upFieldFill();
-      this.getWinner();
-    }
+    this.setFieldValue(rowIndex, colIndex);
+    this.upFieldFill();
+    this.changeCurrentSymbol(); 
+  }
 
-    isFinished() {
-      const winner = this.getWinner();
-      if(winner == null) {
-        return false;
-      } else return true;
-    }
+  isFinished() {
+    if(this.getWinner() || this.noMoreTurns()) return true;
+    return false;
+  }
 
-    getWinner() {
-      const checkRows = () => {
-        let result = null;
-        for(let i = 0; i < this.field.length; i++) {
-          const[x, y, z] = this.field[i];
-          if(x && x === y && x === z) {
-            result = x;
-          }
+  getWinner() {
+    const checkRows = () => {
+      let result = null;
+      for(let i = 0; i < this.field.length; i++) {
+        const[x, y, z] = this.field[i];
+        if(x && x === y && x === z) {
+          result = x;
         }
-        return result;
       }
+      return result;
+    }
       
-      const checkColumns = () => {
-        let result = null;  
-        for(let i = 0; i < this.field[0].length; i++) {
-          const arr = [];
-          for(let j = 0; j < this.field.length; j++) {
-            arr.push(this.field[j][i])
-          }
-          const[x, y, z] = arr;
-          if(x && x === y && x === z) {
-            result = x;
-          }
-        }
-        return result;
-      }
-
-      const checkDiag = () => {
-        let result = null;
+    const checkColumns = () => {
+      let result = null;  
+      for(let i = 0; i < this.field[0].length; i++) {
         const arr = [];
-        for(let i = 0; i < this.field.length; i++) {
-          arr.push(this.field[i][i])
+        for(let j = 0; j < this.field.length; j++) {
+          arr.push(this.field[j][i])
         }
         const[x, y, z] = arr;
         if(x && x === y && x === z) {
           result = x;
         }
-        return result;
       }
+      return result;
+    }
+
+    const checkDiag = () => {
+      let result = null;
+      const arr = [];
+      for(let i = 0; i < this.field.length; i++) {
+        arr.push(this.field[i][i])
+      }
+      const[x, y, z] = arr;
+      if(x && x === y && x === z) {
+        result = x;
+      }
+      return result;
+    }
        
-      const checkSubDiag = () => {
-        let result = null;
-        const arr = [];
-        for(let i = 0; i < this.field.length; i++) {
-          arr.push(this.field[i][this.field.length-1 - i])
-        }
-        const[x, y, z] = arr;
-        if(x && x === y && x === z) {
-          result = x;
-        }
-        return result;
+    const checkSubDiag = () => {
+      let result = null;
+      const arr = [];
+      for(let i = 0; i < this.field.length; i++) {
+        arr.push(this.field[i][this.field.length-1 - i])
       }
-
-      return checkRows() || checkColumns() || checkDiag() || checkSubDiag();
+      const[x, y, z] = arr;
+      if(x && x === y && x === z) {
+        result = x;
+      }
+      return result;
     }
 
-    noMoreTurns() {
-      return this.step >= this.field.length * this.field[0].length;
-    }
+    return checkRows() || checkColumns() || checkDiag() || checkSubDiag();
+  }
 
-    isDraw() {
-      if(!this.isFinished() || this.getWinner()) return false; 
-      return true;
-    }
+  noMoreTurns() {
+    return this.step >= this.field.length * this.field[0].length;
+  }
+
+  isDraw() {
+    if(this.getWinner() || !this.noMoreTurns()) return false;
+    return true;
+  }
 
   getFieldValue(rowIndex, colIndex) {
     return this.field[rowIndex][colIndex];
@@ -118,14 +112,3 @@ class TicTacToe {
 }
 
 module.exports = TicTacToe;
-
-// const game = new TicTacToe();
-
-// game.nextTurn(0, 1)
-// game.nextTurn(0, 2)
-// game.nextTurn(1, 0)
-// game.nextTurn(1, 1)
-// game.nextTurn(1, 1)
-// game.nextTurn(1, 1)
-// console.log(game.field)
-// console.log(game.currentSymbol)
